@@ -1,0 +1,56 @@
+body {
+    background: url('https://wallpaperaccess.com/full/6542066.jpg') no-repeat center center/cover;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px cyan;
+    width: 90%;
+    max-width: 500px;
+}
+
+.title {
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: 0 0 10px cyan;
+}
+
+input, select, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+button {
+    background: cyan;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: darkcyan;
+    box-shadow: 0 0 10px cyan;
+}
+
+.results {
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(0, 255, 255, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 0 10px cyan;
+}

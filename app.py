@@ -1,7 +1,10 @@
+from flask import Flask, render_template, request
 import base64
 import hashlib
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
+
+app = Flask(__name__)
 
 def generate_key(user_key):
     return hashlib.sha256(user_key.encode()).digest()
@@ -39,31 +42,26 @@ def aes_decrypt(user_key, encrypted_message):
     cipher = AES.new(key, AES.MODE_CBC, iv)
     return unpad(cipher.decrypt(encrypted_bytes), AES.block_size).decode()
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    encrypted_message = decrypted_message = ""
+    if request.method == 'POST':
+        message = request.form['message']
+        key = request.form['key']
+        method = request.form['method']
+
+        if method == 'caesar':
+            shift = int(request.form['shift'])
+            encrypted_message = caesar_cipher(message, shift)
+            decrypted_message = caesar_decipher(encrypted_message, shift)
+        elif method == 'xor':
+            encrypted_message = xor_cipher(message, key)
+            decrypted_message = xor_cipher(encrypted_message, key)
+        elif method == 'aes':
+            encrypted_message = aes_encrypt(key, message)
+            decrypted_message = aes_decrypt(key, encrypted_message)
+    
+    return render_template('index.html', encrypted_message=encrypted_message, decrypted_message=decrypted_message)
+
 if __name__ == "__main__":
-    print("Selecciona un método de cifrado:")
-    print("1. César")
-    print("2. XOR")
-    print("3. AES")
-    
-    opcion = input("Opción: ")
-    mensaje = input("Ingrese el mensaje a cifrar: ")
-    
-    if opcion == "1":
-        shift = int(input("Ingrese el desplazamiento: "))
-        mensaje_cifrado = caesar_cipher(mensaje, shift)
-        print("Mensaje cifrado:", mensaje_cifrado)
-        print("Mensaje descifrado:", caesar_decipher(mensaje_cifrado, shift))
-    
-    elif opcion == "2":
-        clave = input("Ingrese la clave XOR: ")
-        mensaje_cifrado = xor_cipher(mensaje, clave)
-        print("Mensaje cifrado:", mensaje_cifrado)
-        print("Mensaje descifrado:", xor_cipher(mensaje_cifrado, clave))
-    
-    elif opcion == "3":
-        clave = input("Ingrese la clave AES: ")
-        mensaje_cifrado = aes_encrypt(clave, mensaje)
-        print("Mensaje cifrado:", mensaje_cifrado)
-        print("Mensaje descifrado:", aes_decrypt(clave, mensaje_cifrado))
-    else:
-        print("Opción no válida.")
+    app.run(debug=True)
